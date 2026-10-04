@@ -20,7 +20,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-64 min-h-screen bg-[#0e1726] border-r border-slate-700 text-white p-5">
+    <div className="w-64 min-h-screen hidden lg:block bg-black/20 backdrop-blur-2xl border-r border-white/10">
       <h1 className="text-2xl font-bold text-blue-400 mb-2">
         SmartRetail AI
       </h1>

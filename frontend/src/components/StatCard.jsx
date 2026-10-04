@@ -22,10 +22,17 @@ export default function StatCard({
         {title}
       </p>
 
-      <h2 className={`text-4xl font-bold mt-2 ${color}`}>
-        {value}
-      </h2>
-
+     <h2
+  className={`
+  text-3xl
+  md:text-4xl
+  font-bold
+  mt-2
+  ${color}
+`}
+>
+  {value}
+</h2>
       <p className="text-xs text-gray-500 mt-2">
         {subtitle}
       </p>
