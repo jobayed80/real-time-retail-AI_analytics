@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Sidebar from "../components/Sidebar";
 import StatCard from "../components/StatCard";
+import CameraStream from "../components/CameraStream"; // Live AI Stream Component
+import RTSPModal from "../components/RTSPModal"; // Import Modal
 import {
   FaUsers, FaSignInAlt, FaSignOutAlt, FaClock,
-  FaExclamationTriangle, FaShieldAlt
+  FaShieldAlt, FaNetworkWired, FaChartArea, FaCashRegister
 } from "react-icons/fa";
+import { FaPlug } from "react-icons/fa";
 
 export default function Dashboard() {
+
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [streamKey, setStreamKey] = useState(Date.now()); // Feed refresh korar jonno key
+
+  const handleStreamConnect = () => {
+    setStreamKey(Date.now()); // Re-render CameraStream component
+  };
+
+
+
   return (
+
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#071421] to-slate-950 text-white">
+
+
+      {/* Dynamic Camera RTSP Modal */}
+      <RTSPModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConnect={handleStreamConnect}
+      />
 
       {/* Mobile Navbar */}
       <div className="lg:hidden p-4 border-b border-white/10 flex justify-between items-center">
@@ -25,11 +48,12 @@ export default function Dashboard() {
         {/* Main Content */}
         <main className="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
 
+          
           {/* Top Header Bar */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold">Welcome Back, Admin!</h1>
-              <p className="text-gray-400 mt-1 text-sm">Real time people counting, analytics and insights for your store.</p>
+              <p className="text-gray-400 mt-1 text-sm">Real-time people counting, advanced computer vision analytics & AI insights.</p>
             </div>
             <div className="hidden xl:flex items-center space-x-3 bg-white/5 border border-white/10 px-4 py-2 rounded-xl backdrop-blur-md">
               <span className="flex h-3 w-3 relative">
@@ -40,13 +64,15 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Stat Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          {/* ========================================== */}
+          {/* 1. TOP SECTION: 5 Stat Cards Pasapashi */}
+          {/* ========================================== */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-5 gap-4 mb-8">
             <StatCard
               icon={<FaUsers size={18} />}
               title="Current Inside"
               value="12"
-              subtitle="People in store[cite: 9]"
+              subtitle="People in store"
               trend="↑ 6%"
               trendColor="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
               iconBgColor="bg-blue-600"
@@ -55,7 +81,7 @@ export default function Dashboard() {
               icon={<FaSignInAlt size={18} />}
               title="Total Entered"
               value="152"
-              subtitle="Today's entries[cite: 9]"
+              subtitle="Today's entries"
               trend="↑ 18%"
               trendColor="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
               iconBgColor="bg-emerald-600"
@@ -64,7 +90,7 @@ export default function Dashboard() {
               icon={<FaSignOutAlt size={18} />}
               title="Total Exited"
               value="140"
-              subtitle="Today's exits[cite: 9]"
+              subtitle="Today's exits"
               trend="↓ 5%"
               trendColor="text-rose-400 bg-rose-500/10 border border-rose-500/20"
               iconBgColor="bg-rose-600"
@@ -73,111 +99,166 @@ export default function Dashboard() {
               icon={<FaClock size={18} />}
               title="Average Dwell Time"
               value="4.8 min"
-              subtitle="Per customer[cite: 9]"
+              subtitle="Per customer"
               trend="↑ 16%"
               trendColor="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20"
               iconBgColor="bg-purple-600"
             />
+            <StatCard
+              icon={<FaCashRegister size={18} />}
+              title="Queue Wait Time"
+              value="2.3 min"
+              subtitle="Estimated checkout delay"
+              trend="↓ 2 min"
+              trendColor="text-cyan-400 bg-cyan-500/10 border border-cyan-500/20"
+              iconBgColor="bg-amber-600"
+            />
           </div>
 
-          {/* Main Dashboard Workspace Grid */}
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
+          {/* ========================================== */}
+          {/* 2. MAIN AI SURVEILLANCE & ADVANCED FEATURES */}
+          {/* ========================================== */}
+          <div className="mb-10 space-y-6">
+            <div className="flex items-center space-x-2 border-b border-white/10 pb-2">
+              <span className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></span>
+              <h2 className="text-lg font-bold text-cyan-300">Live AI Surveillance & Core Vision Modules</h2>
+            </div>
 
-            {/* Left Column (Camera Feed & Safety Logs) */}
-            <div className="xl:col-span-1 space-y-6"> {/* ekhane xl:col-span-2 theke komiye xl:col-span-1 kora holo */}
+            {/* Grid for Camera Feed and Advanced Features Side-by-Side */}
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-stretch">
 
-              {/* Live Camera Feed */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-bold text-base flex items-center space-x-2">
-                    <span>Live Camera Feed - Store Entrance (Camera 1)</span>
-                  </h2>
-                  <div className="flex items-center space-x-3">
-                    <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-2.5 py-1 rounded font-bold animate-pulse">
+              {/* Large Live Camera Feed (Spans 7 columns) */}
+              <div className="xl:col-span-7 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5 flex flex-col justify-between">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-bold text-sm">Live Camera Feed - Store Entrance (Camera 1)</h3>
+                  <div className="flex items-center space-x-2">
+                    <button 
+                  onClick={() => setIsModalOpen(true)}
+                  className="flex items-center gap-1.5 bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 hover:bg-cyan-500/30 text-xs px-3 py-1 rounded-lg font-medium transition-all"
+                >
+                  <FaPlug /> Connect RTSP Camera
+                </button>
+
+                    <span className="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] px-2 py-0.5 rounded font-bold animate-pulse">
                       ⚠️ FIRE HAZARD DETECTED!
                     </span>
-                    <span className="text-green-400 text-sm font-bold">● LIVE</span>
+                    <span className="text-green-400 text-xs font-bold">● LIVE</span>
                   </div>
                 </div>
 
-                {/* Aspect Ratio ঠিক করার জন্য aspect-video ব্যবহার করা হয়েছে যাতে ভিডিওর পূর্ণ রূপ দেখা যায় */}
-                <div className="w-full aspect-video bg-black/40 rounded-xl relative overflow-hidden border border-white/10 flex items-center justify-center">
-                  <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded border border-white/10 text-xs font-mono space-y-0.5">
+                {/* Live Camera Stream Integrated Here */}
+                <div className="w-full bg-black/50 rounded-xl relative overflow-hidden border border-white/10 flex items-center justify-center p-2">
+                  <div className="absolute top-5 left-5 z-10 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded border border-white/10 text-[11px] font-mono space-y-0.5">
                     <p className="text-green-400">ENTRY : 152</p>
                     <p className="text-red-400">EXIT : 140</p>
                     <p className="text-cyan-400 font-bold">INSIDE : 12</p>
                   </div>
-                  <p className="text-gray-500 text-sm">YOLOv8 Detection Stream Active</p>
+
+                  {/* Camera Component Call */}
+                  <CameraStream key={streamKey} />
                 </div>
               </div>
 
-              {/* Safety & Risk Alert Log */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-bold text-base flex items-center space-x-2">
-                    <FaShieldAlt className="text-red-400" />
-                    <span>Safety & Risk Alert Log</span>
-                  </h2>
-                  <span className="text-xs text-gray-400 cursor-pointer hover:text-white">View All</span>
+              {/* Advanced Features Side Panels (Spans 5 columns) */}
+              <div className="xl:col-span-5 flex flex-col justify-between gap-4">
+
+                {/* Customer Behavior Heatmap */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex-1 flex flex-col justify-between">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-bold text-xs flex items-center gap-1.5 text-cyan-300">
+                      <FaChartArea /> Customer Behavior Heatmap
+                    </h4>
+                    <span className="text-[11px] text-gray-400 bg-black/30 px-2 py-0.5 rounded border border-white/5">Aisle 4</span>
+                  </div>
+                  <div className="bg-black/30 rounded-xl flex items-center justify-center border border-white/5" style={{ height: '200px' }}>
+                    <p className="text-gray-400 text-xs">[Spatial Traffic Density Map]</p>
+                  </div>
                 </div>
 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-sm">
-                    <thead>
-                      <tr className="border-b border-white/10 text-gray-400 text-xs">
-                        <th className="py-2.5 px-3 font-medium">Timestamp</th>
-                        <th className="py-2.5 px-3 font-medium">Event Type</th>
-                        <th className="py-2.5 px-3 font-medium">Location</th>
-                        <th className="py-2.5 px-3 font-medium">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-white/5 text-gray-300 text-xs">
-                      <tr>
-                        <td className="py-2.5 px-3 font-mono">10:22:45</td>
-                        <td className="py-2.5 px-3 text-red-400 font-semibold">Fire Hazard</td>
-                        <td className="py-2.5 px-3">Store Entrance</td>
-                        <td className="py-2.5 px-3"><span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">ALARM</span></td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-mono">10:19:45</td>
-                        <td className="py-2.5 px-3 text-red-400 font-semibold">Fire Hazard</td>
-                        <td className="py-2.5 px-3">Store Entrance</td>
-                        <td className="py-2.5 px-3"><span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">ALARM</span></td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 px-3 font-mono">10:10:12</td>
-                        <td className="py-2.5 px-3 text-amber-400">Occupancy Limit</td>
-                        <td className="py-2.5 px-3">Aisle 4</td>
-                        <td className="py-2.5 px-3"><span className="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded">Monitored</span></td>
-                      </tr>
-                    </tbody>
-                  </table>
+                {/* Multi-Camera Tracking (Re-ID) */}
+                <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex-1 flex flex-col justify-between">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-bold text-xs flex items-center gap-1.5 text-purple-300">
+                      <FaNetworkWired /> Multi-Camera Tracking (Re-ID)
+                    </h4>
+                    <span className="text-[11px] text-gray-400 bg-black/30 px-2 py-0.5 rounded border border-white/5">Cam 1 ➔ Cam 2</span>
+                  </div>
+                  <div className="bg-black/30 rounded-xl flex items-center justify-center border border-white/5" style={{ height: '200px' }}>
+                    <p className="text-gray-400 text-xs">[Cross-Camera Trajectory Active]</p>
+                  </div>
                 </div>
+
               </div>
 
             </div>
 
-            {/* Right Column (2-Column Grid Layout for Cards) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Shoplifting & Security Alert Log */}
+            <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-bold text-base flex items-center space-x-2">
+                  <FaShieldAlt className="text-red-400" />
+                  <span>Security & Shoplifting Alert Log</span>
+                </h3>
+                <span className="text-xs text-gray-400 cursor-pointer hover:text-white">View All</span>
+              </div>
 
-              {/* 1. People Count Trend (Today) */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-white/10 text-gray-400 text-[11px]">
+                      <th className="py-2.5 px-3 font-medium">Time</th>
+                      <th className="py-2.5 px-3 font-medium">Event Type</th>
+                      <th className="py-2.5 px-3 font-medium">Location</th>
+                      <th className="py-2.5 px-3 font-medium">Suspect ID</th>
+                      <th className="py-2.5 px-3 font-medium">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-white/5 text-gray-300 text-xs">
+                    <tr>
+                      <td className="py-2.5 px-3 font-mono">10:24:12</td>
+                      <td className="py-2.5 px-3 text-red-400 font-semibold">Shoplifting (Concealment)</td>
+                      <td className="py-2.5 px-3">Aisle 8</td>
+                      <td className="py-2.5 px-3 font-mono text-cyan-300">ID #4402</td>
+                      <td className="py-2.5 px-3"><span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">Security Notified</span></td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-3 font-mono">10:22:45</td>
+                      <td className="py-2.5 px-3 text-red-400 font-semibold">Fire Hazard</td>
+                      <td className="py-2.5 px-3">Store Entrance</td>
+                      <td className="py-2.5 px-3 font-mono text-gray-400">Camera 1</td>
+                      <td className="py-2.5 px-3"><span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded font-bold">ALARM</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* ========================================== */}
+          {/* 3. ANALYTICS & GRAPHS SECTION */}
+          {/* ========================================== */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-2 border-b border-white/10 pb-2">
+              <span className="w-3 h-3 bg-purple-400 rounded-full"></span>
+              <h2 className="text-lg font-bold text-purple-300">Store Analytics, Demographics & Trends</h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+              {/* People Count Trend */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
                 <div className="flex justify-between items-center mb-3">
                   <h3 className="font-bold text-sm">People Count Trend (Today)</h3>
-                  <div className="flex items-center gap-3 text-[10px] text-gray-400">
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-emerald-500"></span> Entries</span>
-                    <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-rose-500"></span> Exits</span>
-                  </div>
                 </div>
-                <div className="h-28 bg-black/20 rounded-lg flex items-center justify-center border border-white/5">
+                <div className="h-32 bg-black/20 rounded-lg flex items-center justify-center border border-white/5">
                   <p className="text-gray-500 text-xs">[Line Chart Mockup]</p>
                 </div>
               </div>
 
-              {/* 2. Gender Distribution */}
+              {/* Gender Distribution */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
                 <h3 className="font-bold text-sm mb-3">Gender Distribution</h3>
-                <div className="flex items-center justify-around py-1">
+                <div className="flex items-center justify-around py-2">
                   <div className="w-20 h-20 rounded-full border-4 border-blue-500 border-t-pink-500 flex items-center justify-center text-xs font-bold">
                     152
                   </div>
@@ -188,61 +269,61 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* 3. Age Group Distribution */}
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                <h3 className="font-bold text-sm mb-3">Age Group Distribution</h3>
-                <div className="h-24 bg-black/20 rounded-lg flex items-center justify-center border border-white/5">
-                  <p className="text-gray-500 text-xs">[Bar Chart: 0-18, 18-30, 30-50, 50+]</p>
-                </div>
-              </div>
-
-              {/* 4. Store Occupancy */}
+              {/* Store Occupancy */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
                 <h3 className="font-bold text-sm mb-2">Store Occupancy</h3>
-                <div className="flex justify-between items-center my-2">
+                <div className="flex justify-between items-center my-3">
                   <div>
                     <h4 className="text-2xl font-extrabold text-cyan-400">12</h4>
                     <p className="text-[11px] text-gray-400">People Inside</p>
                   </div>
                   <div className="text-right text-xs">
-                    <p className="text-gray-400">Store Capacity: <span className="text-white font-bold">50</span></p>
-                    <p className="text-cyan-300 font-bold mt-0.5">Occupancy Rate: 24%</p>
+                    <p className="text-gray-400">Capacity: <span className="text-white font-bold">50</span></p>
+                    <p className="text-cyan-300 font-bold mt-0.5">Rate: 24%</p>
                   </div>
                 </div>
               </div>
 
-              {/* 5. Recent Activity */}
+              {/* Age Group Distribution */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
-                <h3 className="font-bold text-sm mb-3">Recent Activity</h3>
-                <div className="h-24 bg-black/20 rounded-lg flex items-center justify-center border border-white/5">
-                  <p className="text-gray-500 text-xs">[Activity Histogram]</p>
+                <h3 className="font-bold text-sm mb-3">Age Group Distribution</h3>
+                <div className="h-28 bg-black/20 rounded-lg flex items-center justify-center border border-white/5">
+                  <p className="text-gray-500 text-xs">[Bar Chart: 0-18, 18-30, 30-50, 50+]</p>
                 </div>
               </div>
 
-              {/* 6. Peak Hours (Today) */}
+              {/* Smart Checkout Queue Status */}
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
                 <div className="flex justify-between items-center mb-3">
-                  <h3 className="font-bold text-sm">Peak Hours (Today)</h3>
-                  <span className="text-xs text-cyan-400 cursor-pointer">ViewAll</span>
+                  <h3 className="font-bold text-sm text-cyan-300">Queue Status</h3>
+                  <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">Optimal</span>
                 </div>
-                <div className="space-y-2.5 text-xs">
-                  <div className="flex justify-between items-center pb-2 border-b border-white/5">
-                    <span className="text-red-400">● Store over capacity warning</span>
-                    <span className="text-gray-400 font-mono">10:20 AM</span>
+                <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                  <div className="bg-black/30 p-2 rounded-xl border border-white/5">
+                    <p className="text-[10px] text-gray-400">Lane 1</p>
+                    <p className="font-bold text-white">4 People</p>
                   </div>
-                  <div className="flex justify-between items-center pb-2 border-b border-white/5">
-                    <span className="text-amber-400">● High dwell time detected</span>
-                    <span className="text-gray-400 font-mono">09:45 AM</span>
+                  <div className="bg-black/30 p-2 rounded-xl border border-white/5">
+                    <p className="text-[10px] text-gray-400">Lane 2</p>
+                    <p className="font-bold text-white">3 People</p>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-blue-400">● Camera 2 offline</span>
-                    <span className="text-gray-400 font-mono">09:10 AM</span>
-                  </div>
+                </div>
+              </div>
+
+              {/* Peak Hours & System Logs */}
+              <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-5">
+                <div className="flex justify-between items-center mb-3">
+                  <h3 className="font-bold text-sm">System Logs</h3>
+                  <span className="text-xs text-cyan-400 cursor-pointer">View All</span>
+                </div>
+                <div className="space-y-2 text-xs text-gray-300">
+                  <p className="text-red-400">● Over capacity warning (10:20 AM)</p>
+                  <p className="text-amber-400">● Shoplifting pattern logged (09:45 AM)</p>
+                  <p className="text-blue-400">● Camera stream active (09:10 AM)</p>
                 </div>
               </div>
 
             </div>
-
           </div>
 
         </main>
